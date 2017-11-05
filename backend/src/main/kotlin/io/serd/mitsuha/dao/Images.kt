@@ -8,9 +8,10 @@ import org.springframework.transaction.annotation.Transactional
 
 object Images : Table() {
     val id = integer("id").autoIncrement().primaryKey()
-    val file = varchar("file", 256)
     val name = varchar("name", 256).nullable()
     val extension = varchar("extension", 32)
+    val file = varchar("file", 256)
+    val thumb = varchar("thumb", 256)
 }
 
 interface ImageRepository : CrudRepository<Image, Int>
@@ -22,9 +23,10 @@ class ImageRepositoryImpl : ImageRepository {
 
     private fun ResultRow.toImage() = Image(
         id = this[Images.id],
-        file = this[Images.file],
         name = this[Images.name],
-        extension = Extension.fromMimeType(this[Images.extension])
+        extension = Extension.fromMimeType(this[Images.extension]),
+        file = this[Images.file],
+        thumb = this[Images.thumb]
     )
 
     override fun findAll(): List<Image> = Images.selectAll().map { it.toImage() }
@@ -34,9 +36,10 @@ class ImageRepositoryImpl : ImageRepository {
     override fun save(value: Image): Image {
         val id = if (Images.select { Images.id eq value.id }.empty()) {
             Images.insert {
-                it[file] = value.file
                 it[name] = value.name
                 it[extension] = value.extension.mimeType
+                it[file] = value.file
+                it[thumb] = value.thumb
             }[Images.id]
         } else {
             Images.update({ Images.id eq value.id }) {

@@ -16,7 +16,7 @@ fun RBuilder.logo(height: Int = 100) {
         attrs.style = js {
             this.height = height
         }
-        img(alt = "React components.logo.components.logo", src = reactLogo, classes = "Logo-react") {}
-        img(alt = "Kotlin components.logo.components.logo", src = kotlinLogo, classes = "Logo-kotlin") {}
+        img(alt = "React logo", src = reactLogo, classes = "Logo-react") {}
+        img(alt = "Kotlin logo", src = kotlinLogo, classes = "Logo-kotlin") {}
     }
 }

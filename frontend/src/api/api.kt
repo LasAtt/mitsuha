@@ -23,3 +23,12 @@ suspend fun getImageFile(id: Int): Blob? {
         response.blob().asDynamic()
     }).await()
 }
+
+suspend fun getImages(): List<Image> {
+    val images: Array<Image> = window.fetch(
+        "http://localhost:8080/images/"
+    ).then({ response ->
+        response.json().asDynamic()
+    }).await()
+    return images.asList()
+}

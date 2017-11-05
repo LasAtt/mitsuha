@@ -1,3 +1,16 @@
-.navBar {
+@import "/variables/variables.css";
 
+.navBar {
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    justify-content: center;
+}
+
+.navItem {
+    cursor: pointer;
+}
+
+.navItem + .navItem {
+    margin-left: var(--gutter);
 }

@@ -6,7 +6,7 @@ import kotlin.coroutines.experimental.*
 import kotlin.js.Promise
 
 fun launch(block: suspend () -> Unit) {
-    async(block).catch { exception -> console.log("Failed with $exception") }
+    async(block).catch { exception -> throw exception }
 }
 
 suspend fun <T> Promise<T>.await(): T = suspendCoroutine { cont ->

@@ -1,0 +1,7 @@
+@import "./palette.css";
+
+:root {
+    --gutterMore: 32px;
+    --gutter: 16px;
+    --gutterMini: 8px;
+}

@@ -9,7 +9,9 @@ data class Image(
     @JsonIgnore
     val extension: Extension,
     @JsonIgnore
-    val file: String
+    val file: String,
+    @JsonIgnore
+    val thumb: String
 )
 
 enum class Extension(val mimeType: String) {

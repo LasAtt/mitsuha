@@ -1,6 +1,6 @@
 package components.navbar
 
-import kotlinx.html.onClick
+import kotlinx.html.js.onClickFunction
 import react.*
 import react.dom.*
 
@@ -9,39 +9,33 @@ sealed class MainView {
     object Images : MainView()
 }
 
-interface NavBarState : RState {
-    var mainView: MainView
+interface NavBarProps : RProps {
+    var activeView: MainView
+    var changeView: (MainView) -> Unit
 }
 
-class NavBar : RComponent<RProps, NavBarState>() {
-
-    override fun NavBarState.init() {
-        mainView = MainView.Home
-    }
-
-    fun setMainView(mainView: MainView) {
-        console.log(mainView)
-        setState {
-            this.mainView = mainView
-        }
-    }
+class NavBar : RComponent<NavBarProps, RState>() {
 
     override fun RBuilder.render() {
-        div {
-            nav {
-                attrs {
-                    onClick = { setMainView(MainView.Home) }.asDynamic()
-                }
-                +"Home"
-            }
-            nav {
-                attrs {
-                    onClick = { setMainView(MainView.Images) }.asDynamic()
-                }
-                +"Images"
-            }
+        nav(classes = "navBar") {
+            navItem(label = "Home") { props.changeView(MainView.Home) }
+            navItem(label = "Images") { props.changeView(MainView.Images) }
         }
     }
 }
 
-fun RBuilder.navBar() = child(NavBar::class) {}
+fun RBuilder.navBar(activeView: MainView, changeView: (MainView) -> Unit) = child(NavBar::class) {
+    attrs {
+        this.activeView = activeView
+        this.changeView = changeView
+    }
+}
+
+fun RBuilder.navItem(label: String, onClick: () -> Unit) {
+    a(classes = "navItem") {
+        attrs {
+            onClickFunction = { onClick() }
+        }
+        +label
+    }
+}

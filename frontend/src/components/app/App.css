@@ -1,11 +1,12 @@
+@import "/variables/variables.css";
+
 body {
   text-align: center;
 }
 
 .appHeader {
-  background-color: #000;
-  height: 160px;
-  padding: 20px;
+  background-color: var(--primary0);
+  padding: var(--gutter);
   color: white;
 }
 
