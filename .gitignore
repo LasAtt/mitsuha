@@ -2,6 +2,7 @@
 /build/
 !gradle/wrapper/gradle-wrapper.jar
 /out/
+.DS_STORE
 
 ### STS ###
 .apt_generated
