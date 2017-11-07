@@ -4,20 +4,20 @@ import io.serd.mitsuha.domain.Extension
 import io.serd.mitsuha.domain.Image
 import org.jetbrains.exposed.sql.*
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 object Images : Table() {
     val id = integer("id").autoIncrement().primaryKey()
-    val name = varchar("name", 256).nullable()
+    val name = varchar("name", 128).nullable()
     val extension = varchar("extension", 32)
-    val file = varchar("file", 256)
-    val thumb = varchar("thumb", 256)
+    val path = varchar("path", 32)
+    val hash = long("hash")
 }
 
-interface ImageRepository : CrudRepository<Image, Int>
+interface ImageRepository : CrudRepository<Image, Int> {
+    fun save(name: String, extension: Extension, path: String, hash: Long): Image
+}
 
 @Repository
-@Transactional
 class ImageRepositoryImpl : ImageRepository {
     override fun createTable() = SchemaUtils.create(Images)
 
@@ -25,29 +25,29 @@ class ImageRepositoryImpl : ImageRepository {
         id = this[Images.id],
         name = this[Images.name],
         extension = Extension.fromMimeType(this[Images.extension]),
-        file = this[Images.file],
-        thumb = this[Images.thumb]
+        path = this[Images.path],
+        hash = this[Images.hash]
     )
 
     override fun findAll(): List<Image> = Images.selectAll().map { it.toImage() }
 
     override fun findOne(id: Int): Image? = Images.select { Images.id eq id }.firstOrNull()?.toImage()
 
+    override fun save(name: String, extension: Extension, path: String, hash: Long): Image {
+        val id = Images.insert {
+            it[Images.name] = name
+            it[Images.extension] = extension.mimeType
+            it[Images.path] = path
+            it[Images.hash] = hash
+        }[Images.id]
+        return Image(id, name, extension, path, hash)
+    }
+
     override fun save(value: Image): Image {
-        val id = if (Images.select { Images.id eq value.id }.empty()) {
-            Images.insert {
-                it[name] = value.name
-                it[extension] = value.extension.mimeType
-                it[file] = value.file
-                it[thumb] = value.thumb
-            }[Images.id]
-        } else {
-            Images.update({ Images.id eq value.id }) {
-                it[name] = value.name
-            }
-            value.id
+        Images.update({ Images.id eq value.id }) {
+            it[name] = value.name
         }
-        return value.copy(id = id)
+        return value
     }
 
     override fun remove(value: Image) {

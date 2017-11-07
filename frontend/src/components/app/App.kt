@@ -1,59 +1,62 @@
 package components.app
 
-import components.images.images
-import react.*
-import react.dom.*
-import components.logo.*
-import components.navbar.MainView
+import common.hashRouter
+import common.route
+import common.switch
+import components.images.Images
+import components.logo.logo
+import components.main.main
 import components.navbar.navBar
 import components.ticker.ticker
-import components.view.view
+import components.view.View
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.RState
+import react.dom.code
+import react.dom.div
+import react.dom.h2
+import react.dom.p
 
-interface AppState : RState {
-    var view: MainView
+
+class App : RComponent<RProps, RState>() {
+
+    override fun RBuilder.render() {
+        hashRouter {
+            div {
+                div("appHeader") {
+                    logo()
+                    h2 {
+                        +"Mitsuha Image Gallery"
+                    }
+                    navBar()
+                }
+
+                main {
+                    switch {
+                        route(path = "/", exact = true, component = Home::class)
+                        route(path = "/images/:id", component = View::class)
+                        route(path = "/images", exact = true, component = Images::class)
+                    }
+                }
+            }
+        }
+    }
 }
 
-class App : RComponent<RProps, AppState>() {
-
-    override fun AppState.init() {
-        view = MainView.Home
-    }
-
-    fun changeView(view: MainView) = setState {
-        this.view = view
-    }
+class Home : RComponent<RProps, RState>() {
 
     override fun RBuilder.render() {
         div {
-            div("appHeader") {
-                logo()
-                h2 {
-                    +"Mitsuha Image Gallery"
-                }
-                navBar(
-                    activeView = state.view,
-                    changeView = { view -> changeView(view) }
-                )
+            p("appIntro") {
+                +"To get started, edit "
+                code { +"components/app/App.kt" }
+                +" and save to reload."
             }
-            when (state.view) {
-                MainView.Home -> home()
-                MainView.Images -> images()
+            p("appTicker") {
+                ticker()
             }
         }
-    }
-}
-
-fun RBuilder.home() {
-    div {
-        p("appIntro") {
-            +"To get started, edit "
-            code { +"components/app/App.kt" }
-            +" and save to reload."
-        }
-        p("appTicker") {
-            ticker()
-        }
-
     }
 }
 

@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.http.MediaType
 
 data class Image(
-    val id: Int? = null,
+    val id: Int,
     val name: String? = null,
-    @JsonIgnore
-    val extension: Extension,
-    @JsonIgnore
-    val file: String,
-    @JsonIgnore
-    val thumb: String
+    @JsonIgnore val extension: Extension,
+    @JsonIgnore val path: String,
+    @JsonIgnore val hash: Long
 )
 
 enum class Extension(val mimeType: String) {

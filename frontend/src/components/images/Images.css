@@ -1,0 +1,22 @@
+@import "/config/variables.css";
+
+:root {
+    --matrixWidth: 820px;
+}
+
+.images {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: var(--matrixWidth);
+    padding: var(--gutter);
+}
+
+.imagesImage {
+    max-width: fit-content;
+    background-color: var(--white);
+    border-radius: var(--borderRadius);
+    padding: var(--gutterMini);
+    margin: var(--gutter);
+}
+

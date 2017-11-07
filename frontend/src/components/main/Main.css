@@ -1,0 +1,6 @@
+@import "/config/variables.css";
+
+.main {
+    display: flex;
+    justify-content: center;
+}

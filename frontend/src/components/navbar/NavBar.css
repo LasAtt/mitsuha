@@ -1,4 +1,4 @@
-@import "/variables/variables.css";
+@import "/config/variables.css";
 
 .navBar {
     display: flex;
@@ -9,6 +9,8 @@
 
 .navItem {
     cursor: pointer;
+    text-decoration: none;
+    color: var(--white);
 }
 
 .navItem + .navItem {

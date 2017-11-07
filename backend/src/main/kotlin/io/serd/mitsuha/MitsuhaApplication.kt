@@ -1,6 +1,6 @@
 package io.serd.mitsuha
 
-import io.serd.mitsuha.dao.ImageRepository
+import io.serd.mitsuha.services.ImageService
 import org.jetbrains.exposed.spring.SpringTransactionManager
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.CommandLineRunner
@@ -18,8 +18,8 @@ class MitsuhaApplication {
     fun transactionManager(@Qualifier("dataSource") dataSource: DataSource) = SpringTransactionManager(dataSource)
 
     @Bean
-    fun init(imageRepository: ImageRepository) = CommandLineRunner {
-        imageRepository.createTable()
+    fun init(imageService: ImageService) = CommandLineRunner {
+        imageService.createTable()
     }
 
     @Bean

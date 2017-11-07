@@ -49,6 +49,7 @@ dependencies {
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.3'
 	compile 'org.jetbrains.exposed:exposed:0.8.7'
 	compile 'org.jetbrains.exposed:spring-transaction:0.8.7'
+    compile 'net.coobird:thumbnailator:0.4.8'
 	runtime 'org.springframework.boot:spring-boot-devtools'
 	runtime 'com.h2database:h2'
 	testCompile 'org.springframework.boot:spring-boot-starter-test'

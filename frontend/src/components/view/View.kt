@@ -12,7 +12,7 @@ import react.dom.div
 import react.dom.img
 
 interface ViewProps : RProps {
-    var id: Int
+    var match: dynamic
 }
 
 interface ViewState : RState {
@@ -23,9 +23,10 @@ interface ViewState : RState {
 class View(props: ViewProps) : RComponent<ViewProps, ViewState>(props) {
 
     override fun componentWillMount() {
+        val id: Int = (props.match.params.id as String).toInt()
         launch {
-            val image = getImage(props.id) ?: throw Throwable("Image with id ${props.id} doesn't exist")
-            val imgSrc = getImageFile(props.id) ?: throw Throwable("Image with id ${props.id} doesn't exist")
+            val image = getImage(id) ?: throw Throwable("Image with id $id doesn't exist")
+            val imgSrc = getImageFile(id) ?: throw Throwable("Image with id $id doesn't exist")
             setState {
                 this.image = image
                 this.imageSrc = URL.createObjectURL(imgSrc)
@@ -38,8 +39,4 @@ class View(props: ViewProps) : RComponent<ViewProps, ViewState>(props) {
             img(alt = "loading", src = state.imageSrc) {  }
         }
     }
-}
-
-fun RBuilder.view(id: Int) = child(View::class) {
-    attrs.id = id
 }

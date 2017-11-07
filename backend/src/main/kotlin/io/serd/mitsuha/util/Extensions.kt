@@ -1,6 +1,7 @@
 package io.serd.mitsuha.util
 
-import java.io.File
-import java.nio.file.Files
+import java.awt.image.BufferedImage
+import java.awt.image.DataBufferByte
 
-fun File.readBytes(): ByteArray = Files.readAllBytes(this.toPath())
+
+//fun BufferedImage.toByteArray(): ByteArray = (data.dataBuffer as DataBufferByte).data

@@ -1,7 +1,8 @@
 package components.images
 
-import api.getImageFile
+import api.getThumbnail
 import common.launch
+import common.routeLink
 import domain.Image
 import org.w3c.dom.url.URL
 import react.*
@@ -10,37 +11,46 @@ import react.dom.img
 
 interface ImagesState : RState {
     var images: List<Image>
-    var imageFiles: Map<Int, String>
+    var thumbnails: Map<Int, String>
 }
 
 class Images : RComponent<RProps, ImagesState>() {
 
     override fun ImagesState.init() {
         images = listOf()
-        imageFiles = mapOf()
+        thumbnails = mapOf()
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     override fun componentDidMount() {
         launch {
             val images = api.getImages()
-            val imageFiles = images.mapNotNull { image ->
-                val blob = getImageFile(image.id) ?: return@mapNotNull null
+            val thumbnails = images.mapNotNull { image ->
+                val blob = getThumbnail(image.id) ?: return@mapNotNull null
                 image.id to URL.createObjectURL(blob)
             }.toMap()
             setState {
                 this.images = images
-                this.imageFiles = imageFiles
+                this.thumbnails = thumbnails
+            }
+        }
+    }
+
+    private fun RBuilder.thumbnail(image: Image) {
+        div(classes = "imagesImage") {
+            key = "${image.id}"
+            routeLink("/images/${image.id}") {
+                img(src = state.thumbnails[image.id]) {
+                    key = "${image.id}"
+                }
             }
         }
     }
 
     override fun RBuilder.render() {
-        div {
-            state.images.map { image ->
-                img(src = state.imageFiles[image.id]) {
-                    key = "${image.id}"
-                }
+        div(classes = "images") {
+            for(image in state.images) {
+                thumbnail(image)
             }
         }
     }
