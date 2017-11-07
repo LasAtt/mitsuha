@@ -11,8 +11,17 @@ import react.*
 import react.dom.div
 import react.dom.img
 
+interface Match {
+    var params: Param
+
+    interface Param {
+        var id: String
+    }
+}
+
+
 interface ViewProps : RProps {
-    var match: dynamic
+    var match: Match
 }
 
 interface ViewState : RState {
@@ -23,7 +32,7 @@ interface ViewState : RState {
 class View(props: ViewProps) : RComponent<ViewProps, ViewState>(props) {
 
     override fun componentWillMount() {
-        val id: Int = (props.match.params.id as String).toInt()
+        val id: Int = props.match.params.id.toInt()
         launch {
             val image = getImage(id) ?: throw Throwable("Image with id $id doesn't exist")
             val imgSrc = getImageFile(id) ?: throw Throwable("Image with id $id doesn't exist")
