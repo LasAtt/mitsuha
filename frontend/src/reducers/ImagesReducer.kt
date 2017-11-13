@@ -3,16 +3,16 @@ package reducers
 import domain.Image
 import redux.Action
 
-sealed class ImagesAction : Action {
-    object Get : ImagesAction()
-    data class GetSuccess(val images: List<Image>): ImagesAction()
-    data class GetFailure(val error: String?, val message: String?): ImagesAction()
+sealed class ImagesAction : Action() {
+    class Get : ImagesAction()
+    data class GetSuccess(val images: Set<Image>) : ImagesAction()
+    data class GetFailure(val error: String?, val message: String?) : ImagesAction()
 }
 
 data class ImagesState(
-    val images: List<Image> = listOf(),
+    val images: Set<Image> = setOf(),
     val fetching: Boolean = false
-)
+) : ReduxState
 
 fun imagesReducer(state: ImagesState = ImagesState(), action: Action) = when(action) {
     is ImagesAction.Get -> state.copy(fetching = true)

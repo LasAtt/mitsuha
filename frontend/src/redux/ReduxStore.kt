@@ -1,20 +1,67 @@
 package redux
 
-interface Action
+import kotlinext.js.jsObject
 
-class InitAction : Action
+abstract class Action {
+    val type = this::class.simpleName
+}
 
-class ReduxStore<T>(val rootReducer: (state: T?, action: Action) -> T) {
-    var state: T = rootReducer(null, InitAction())
+class InitAction : Action()
 
-    var listeners: Set<() -> Any> = setOf()
+interface EnhancerProps<T> {
+    var getState: () -> T
+    var dispatch: (Action) -> Action
+}
 
-    fun dispatch(action: Action) {
-        state = rootReducer(state, action)
+fun <T> createStore(
+    rootReducer: (state: T?, action: Action) -> T,
+    preloadedState: T? = null,
+    enhancers: Array<dynamic>? = null
+): ReduxStore<T> {
+    if (enhancers == null) {
+        return ReduxStore(rootReducer, preloadedState)
     }
 
-    fun subscribe(callback: () -> Any): () -> Unit {
+    return EnhancedReduxStore(rootReducer, preloadedState, enhancers)
+}
+
+
+open class ReduxStore<T>(val rootReducer: (state: T?, action: Action) -> T, preloadedState: T? = null) {
+    var state: T = preloadedState ?: rootReducer(null, jsObject<InitAction> { })
+        protected set
+
+    var listeners: Set<() -> Unit> = setOf()
+
+    open val dispatch = { action: Action ->
+        state = rootReducer(state, action)
+        action
+    }
+
+    fun subscribe(callback: () -> Unit): () -> Unit {
         listeners += callback
         return { listeners -= callback }
+    }
+}
+
+class EnhancedReduxStore<T>(
+    rootReducer: (state: T?, action: Action) -> T,
+    preloadedState: T? = null,
+    val enhancers: Array<out dynamic> = emptyArray()
+) : ReduxStore<T>(rootReducer, preloadedState) {
+
+    override val dispatch = { action: Action ->
+        val getState = this::state
+        val vanillaDispatch = super.dispatch
+        val args = jsObject<EnhancerProps<T>> {
+            this.getState = getState
+            this.dispatch = vanillaDispatch
+        }
+
+        enhancers
+            .plus({ super.dispatch })
+            .map { it(args) }
+            .reduceRight { enhancer, acc ->
+                enhancer(acc)
+            }(action)
     }
 }

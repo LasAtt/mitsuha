@@ -1,18 +1,15 @@
 package io.serd.mitsuha.controllers
 
-import io.serd.mitsuha.domain.mediaType
-import io.serd.mitsuha.buffered_image.scaleTo64Bit
-import io.serd.mitsuha.buffered_image.toGrayScale
 import io.serd.mitsuha.domain.Image
+import io.serd.mitsuha.domain.mediaType
 import io.serd.mitsuha.services.ImageService
+import io.serd.mitsuha.util.addHeader
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import java.util.*
-import javax.imageio.ImageIO
 
 
 @RestController
@@ -30,39 +27,37 @@ class ImageController(
     @GetMapping
     fun getImages() = imageService.findAll()
 
-    @GetMapping("/orig/{id}")
-    fun getOrigImage(@PathVariable id: Int): ResponseEntity<ByteArray> =
+    @GetMapping("/resource/{id}-orig.{extension}")
+    fun getOrigImage(@PathVariable id: Int) =
         imageService.loadOrig(id).let {
-            ok().contentType(it.first.mediaType())
-                .headers(fileHeaders(it.first))
-                .body(it.second.readBytes())
+            fileResponse(it)
         }
 
-    @GetMapping("/thumb/{id}")
-    fun getThumb(@PathVariable id: Int): ResponseEntity<ByteArray> =
+    @GetMapping("/resource/{id}-thumb.{extension}")
+    fun getThumb(@PathVariable id: Int) =
         imageService.loadThumb(id).let {
-            ok().contentType(it.first.mediaType())
-                .headers(fileHeaders(it.first))
-                .body(it.second.readBytes())
+            fileResponse(it)
         }
 
 
-    @GetMapping("/small/{id}")
-    fun getSmall(@PathVariable id: Int): ResponseEntity<ByteArray> =
+
+    @GetMapping("/resource/{id}-small.{extension}")
+    fun getSmall(@PathVariable id: Int)  =
         imageService.loadSmall(id).let {
-            ok().contentType(it.first.mediaType())
-                .headers(fileHeaders(it.first))
-                .body(it.second.readBytes())
+            fileResponse(it)
         }
 
-    @GetMapping("/large/{id}")
-    fun getLarge(@PathVariable id: Int): ResponseEntity<ByteArray> =
+    @GetMapping("/resource/{id}-large.{extension}")
+    fun getLarge(@PathVariable id: Int) =
         imageService.loadLarge(id).let {
-            ok().contentType(it.first.mediaType())
-                .headers(fileHeaders(it.first))
-                .body(it.second.readBytes())
-
+            fileResponse(it)
         }
+
+    private fun fileResponse(it: Pair<Image, File>): ResponseEntity<ByteArray> = ok()
+        .contentType(it.first.mediaType())
+        .headers(fileHeaders(it.first))
+        .body(it.second.readBytes())
+
 
     @DeleteMapping("/{id}")
     fun deleteImage(@PathVariable id: Int) {
@@ -70,11 +65,8 @@ class ImageController(
     }
 
     private fun fileHeaders(image: Image): HttpHeaders {
-        val headers = HttpHeaders()
-        headers.add("Content-disposition",
-            "inline; filename=${image.name}${image.id}")
-        return headers
+        return HttpHeaders()
+            .addHeader("Cache-Control", "max-axe=600")
     }
-
 
 }

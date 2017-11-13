@@ -1,7 +1,8 @@
 package io.serd.mitsuha.util
 
-import java.awt.image.BufferedImage
-import java.awt.image.DataBufferByte
+import org.springframework.http.HttpHeaders
 
-
-//fun BufferedImage.toByteArray(): ByteArray = (data.dataBuffer as DataBufferByte).data
+fun HttpHeaders.addHeader(headerName: String, headerValue: String): HttpHeaders {
+    this.add(headerName, headerValue)
+    return this
+}

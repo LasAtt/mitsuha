@@ -17,27 +17,9 @@
     --gray: #AAAAAA;
     --black: #111111;
 
-    --primary0: #BF7D00; /* Main color */
-    --primary1: #FCA500;
-    --primary2: #D88E00;
-    --primary3: #A76E00;
-    --primary4: #8E5D00;
-
-    --secondary0: #BF4D00;	/* Main Secondary color */
-    --secondary1: #FC6600;
-    --secondary2: #D85700;
-    --secondary3: #A74400;
-    --secondary4: #8E3A00;
-
-    --ternary0: #BF9F00;	/* Main Secondary color */
-    --ternary1: #FCD200;
-    --ternary2: #D8B400;
-    --ternary3: #A78B00;
-    --ternary4: #8E7700;
-
-    --complement0: #0A317F;	/* Main Complement color */
-    --complement1: #0F42A8;
-    --complement2: #0C3990;
-    --complement3: #072A6F;
-    --complement4: #05235F;
+    --main100: rgba(38, 96, 164, 1);
+    --main200: rgba(60, 145, 230, 1);
+    --supplement: rgba(237, 247, 246, 1);
+    --compliment100: rgba(241, 153, 83, 1);
+    --compliment200: rgba(196, 115, 53, 1);
 }

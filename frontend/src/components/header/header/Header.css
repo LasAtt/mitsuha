@@ -1,0 +1,11 @@
+@import "/config/variables.css";
+
+body {
+  text-align: center;
+}
+
+.appHeader {
+  background-color: var(--main100);
+  padding: var(--gutter);
+  color: white;
+}

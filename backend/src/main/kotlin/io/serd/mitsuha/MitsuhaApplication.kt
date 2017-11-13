@@ -13,7 +13,7 @@ import javax.sql.DataSource
 
 
 @SpringBootApplication
-class MitsuhaApplication {
+class MitsuhaApplication : WebMvcConfigurer {
     @Bean
     fun transactionManager(@Qualifier("dataSource") dataSource: DataSource) = SpringTransactionManager(dataSource)
 
@@ -22,11 +22,8 @@ class MitsuhaApplication {
         imageService.createTable()
     }
 
-    @Bean
-    fun corsConfigurer() = object : WebMvcConfigurer {
-        override fun addCorsMappings(registry: CorsRegistry) {
-            registry.addMapping("/**")
-        }
+    override fun addCorsMappings(registry: CorsRegistry) {
+        registry.addMapping("/**")
     }
 }
 

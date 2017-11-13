@@ -3,23 +3,21 @@ package reducers
 import domain.Image
 import redux.Action
 
-sealed class UploadActions : Action {
+sealed class UploadActions : Action() {
     class Upload : UploadActions()
 
-    data class UploadSuccess(
-        val image: Image
-    ) : UploadActions()
+    data class UploadSuccess(var image: Image) : UploadActions()
 
-    class UploadFailure: UploadActions()
+    class UploadFailure : UploadActions()
 }
 
-data class UploadState(
+data class UploadReduxState(
     val id: Int,
     val name: String,
     val fetching: Boolean
-)
+) : ReduxState
 
-fun uploadReducer(state: UploadState, action: Action) = when(action) {
+fun uploadReducer(state: UploadReduxState, action: Action) = when(action) {
     is UploadActions.Upload -> state.copy(fetching = true)
     is UploadActions.UploadSuccess -> state.copy(
         id = action.image.id,

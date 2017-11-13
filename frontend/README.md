@@ -33,7 +33,7 @@ Once the installation is done, you can run some commands inside the project fold
 ### `npm start` or `yarn start`
 
 Runs the components.app in development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to components.view it in the browser.
+Open [http://localhost:3000](http://localhost:3000) to components.images.view it in the browser.
 
 The page will reload automatically when you make edits.<br>
 You will see build errors and lint warnings in the console.

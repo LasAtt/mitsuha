@@ -10,9 +10,14 @@
 .navItem {
     cursor: pointer;
     text-decoration: none;
-    color: var(--white);
+    color: var(--supplement);
 }
 
 .navItem + .navItem {
     margin-left: var(--gutter);
+}
+
+.activeItem {
+    color: var(--compliment100);
+    font-weight: bold;
 }

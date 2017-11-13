@@ -1,0 +1,11 @@
+@import "/config/variables.css";
+
+.imageDiv {
+    margin-top: var(--gutter);
+}
+
+.imgTag {
+    max-width: 1200px;
+    max-height: 1000px;
+    cursor: pointer;
+}

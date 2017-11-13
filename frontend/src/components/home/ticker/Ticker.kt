@@ -1,4 +1,4 @@
-package components.ticker
+package components.home.ticker
 
 import react.*
 import kotlin.browser.*
@@ -34,6 +34,6 @@ class Ticker(props: TickerProps) : RComponent<TickerProps, TickerState>(props) {
     }
 }
 
-fun RBuilder.ticker(startFrom: Int = 0) = child(Ticker::class) {
+fun RBuilder.Ticker(startFrom: Int = 0) = child(Ticker::class) {
     attrs.startFrom = startFrom
 }

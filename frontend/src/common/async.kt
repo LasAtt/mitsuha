@@ -10,7 +10,7 @@ fun launch(block: suspend () -> Unit) {
 }
 
 suspend fun <T> Promise<T>.await(): T = suspendCoroutine { cont ->
-    then({ cont.resume(it) }, { cont.resumeWithException(it) })
+    then({ cont.resume(it) }).catch { cont.resumeWithException(it) }
 }
 
 fun <T> async(block: suspend () -> T): Promise<T> = Promise { resolve, reject ->

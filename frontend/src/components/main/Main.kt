@@ -1,23 +1,27 @@
 package components.main
 
+import kotlinext.js.jsObject
 import react.dom.div
 import react.*
 
-interface MainProps : RProps {
-    var children: dynamic
+@JsModule("src/components/main/Main.css")
+external val styles: MainStyles
+
+interface MainStyles {
+    val main: String
 }
 
-class Main : RComponent<MainProps, RState>() {
+class Main : RComponent<RProps, RState>() {
 
     override fun RBuilder.render() {
-        div(classes = "main") {
+        div(classes = styles.main) {
             children()
         }
     }
 
 }
 
-fun RBuilder.main(children: RBuilder.() -> Unit) = child(Main::class) {
-    attrs.children = buildElements { children() }
+fun RBuilder.Main(children: RHandler<RProps>) = child(Main::class) {
+    children()
 }
 

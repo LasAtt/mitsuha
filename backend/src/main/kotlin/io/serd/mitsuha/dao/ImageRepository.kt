@@ -40,7 +40,7 @@ class ImageRepositoryImpl : ImageRepository {
             it[Images.path] = path
             it[Images.hash] = hash
         }[Images.id]
-        return Image(id, name, extension, path, hash)
+        return Image(id = id, name = name, extension = extension, path = path, hash = hash)
     }
 
     override fun save(value: Image): Image {

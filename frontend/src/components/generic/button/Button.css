@@ -1,0 +1,9 @@
+@import "/config/variables.css";
+
+.button {
+    background-color: var(--main200);
+    color: var(--white);
+    padding: var(--gutterLess);
+    max-width: fit-content;
+    border: 0;
+}

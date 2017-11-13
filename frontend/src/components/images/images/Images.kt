@@ -1,46 +1,45 @@
-package components.images
+package components.images.images
 
-import api.getThumbnail
 import common.launch
-import common.routeLink
+import common.RouteLink
 import domain.Image
-import org.w3c.dom.url.URL
 import react.*
 import react.dom.div
 import react.dom.img
 
+@JsModule("src/components/images/images/Images.css")
+external val styles: ImagesStyles
+
+interface ImagesStyles {
+    val matrix: String
+    val image: String
+}
+
 interface ImagesState : RState {
     var images: List<Image>
-    var thumbnails: Map<Int, String>
 }
 
 class Images : RComponent<RProps, ImagesState>() {
 
     override fun ImagesState.init() {
         images = listOf()
-        thumbnails = mapOf()
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     override fun componentDidMount() {
         launch {
             val images = api.getImages()
-            val thumbnails = images.mapNotNull { image ->
-                val blob = getThumbnail(image.id) ?: return@mapNotNull null
-                image.id to URL.createObjectURL(blob)
-            }.toMap()
             setState {
                 this.images = images
-                this.thumbnails = thumbnails
             }
         }
     }
 
     private fun RBuilder.thumbnail(image: Image) {
-        div(classes = "imagesImage") {
+        div(classes = styles.image) {
             key = "${image.id}"
-            routeLink("/images/${image.id}") {
-                img(src = state.thumbnails[image.id]) {
+            RouteLink("/images/${image.id}") {
+                img(src = "/api/images/resource/${image.id}-thumb.${image.extension}") {
                     key = "${image.id}"
                 }
             }
@@ -48,12 +47,10 @@ class Images : RComponent<RProps, ImagesState>() {
     }
 
     override fun RBuilder.render() {
-        div(classes = "images") {
+        div(classes = styles.matrix) {
             for(image in state.images) {
                 thumbnail(image)
             }
         }
     }
 }
-
-fun RBuilder.images() = child(Images::class) { }

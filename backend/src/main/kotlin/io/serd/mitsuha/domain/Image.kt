@@ -1,20 +1,21 @@
 package io.serd.mitsuha.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.http.MediaType
 
 data class Image(
     val id: Int,
     val name: String? = null,
-    @JsonIgnore val extension: Extension,
-    @JsonIgnore val path: String,
+    val path: String,
+    val extension: Extension,
     @JsonIgnore val hash: Long
 )
 
 enum class Extension(val mimeType: String) {
-    PNG("image/png"),
-    JPEG("image/jpeg"),
-    GIF("image/gif");
+    @JsonProperty("png") PNG("image/png"),
+    @JsonProperty("jpg") JPEG("image/jpeg"),
+    @JsonProperty("gif") GIF("image/gif");
 
     companion object {
         fun fromMimeType(mimeType: String) = when(mimeType) {

@@ -2,11 +2,15 @@ package reducers
 
 import redux.Action
 
-data class ReduxState(
-    val images: ImagesState = ImagesState()
-)
+interface ReduxState
 
-fun rootReducer(state: ReduxState?, action: Action) = state?.copy(
-    images = imagesReducer(state.images, action)
-) ?: ReduxState()
+data class RootState(
+    val images: ImagesState = ImagesState()
+) : ReduxState
+
+fun rootReducer(state: RootState?, action: Action): RootState {
+    return state?.copy(
+        images = imagesReducer(state.images, action)
+    ) ?: RootState()
+}
 

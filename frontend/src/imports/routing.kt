@@ -1,10 +1,15 @@
 @file:JsModule("react-router-dom")
-package common
+package imports
 
 import react.*
 
 @JsName("HashRouter")
 external class HashRouterComponent : React.Component<RProps, RState> {
+    override fun render(): ReactElement?
+}
+
+@JsName("BrowserRouter")
+external class BrowserRouterComponent : React.Component<RProps, RState> {
     override fun render(): ReactElement?
 }
 
@@ -24,7 +29,7 @@ external class LinkComponent : React.Component<LinkProps, RState> {
 }
 
 @JsName("NavLink")
-external class NavComponent : React.Component<RProps, RState> {
+external class NavLinkComponent : React.Component<NavLinkProps, RState> {
     override fun render(): ReactElement?
 }
 
@@ -39,6 +44,13 @@ external interface LinkProps : RProps {
     var className: String?
 }
 
+external interface NavLinkProps : RProps {
+    var to: String
+    var className: String?
+    var activeClassName: String?
+    var exact: Boolean
+}
+
 external interface RouteResultProps<T : RProps> : RProps {
     var match: RouteResultMatch<T>
 }
@@ -47,4 +59,5 @@ external interface RouteResultMatch<T : RProps> {
     var url: String
     var path: String
     var params: T
+    var isExact: Boolean
 }
