@@ -11,32 +11,6 @@ We are always open to [your feedback](https://youtrack.jetbrains.com/issues/CRKA
 
 After creation, your project should look like this:
 
-```
-my-app/
-  README.md
-  node_modules/
-  package.json
-  .gitignore
-  public/
-    favicon.ico
-    index.html
-    manifest.json
-  src/
-    app/
-      App.css
-      App.kt
-    index/
-      index.css
-      index.kt
-    logo/
-      kotlin.svg
-      Logo.css
-      Logo.kt
-      react.svg
-    ticker/
-      Ticker.kt
-```
-
 For the project to build, **these files must exist with exact filenames**:
 
 * `public/index.html` is the page template;
@@ -58,7 +32,7 @@ Once the installation is done, you can run some commands inside the project fold
 
 ### `npm start` or `yarn start`
 
-Runs the app in development mode.<br>
+Runs the components.app in development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload automatically when you make edits.<br>
@@ -66,10 +40,10 @@ You will see build errors and lint warnings in the console.
 
 ### `npm run build` or `yarn build`
 
-Builds the app for production to the `build` folder.<br>
+Builds the components.app for production to the `build` folder.<br>
 It ensures that React is bundled in production mode and the build is optimized for best performance.
 
-The build is minified and the filenames include hashes for cache management. Your app is ready to be deployed.
+The build is minified and the filenames include hashes for cache management. Your components.app is ready to be deployed.
 
 ### `npm run eject`
 
@@ -81,9 +55,9 @@ Running `npm run eject` copies all configuration files and transitive dependenci
 
 ## Debugging the App
 
-You can debug the running app right in IntelliJ IDEA Ultimate using its built-in JavaScript debugger. The IDE will run a new instance of Chrome and attach a debugger to it.
+You can debug the running components.app right in IntelliJ IDEA Ultimate using its built-in JavaScript debugger. The IDE will run a new instance of Chrome and attach a debugger to it.
 
-Start your app by running `npm start`. Put the breakpoints in your Kolin code.
+Start your components.app by running `npm start`. Put the breakpoints in your Kolin code.
 Then select `Debug in Chrome` from the list of run/debug configurations on the top-right and click the green debug icon or press `^D` on macOS or `F9` on Windows and Linux to start debugging.
 
 Currently, debugging is supported only in IntelliJ IDEA Ultimate 2017.3.

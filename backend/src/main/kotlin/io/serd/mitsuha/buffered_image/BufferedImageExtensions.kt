@@ -22,7 +22,7 @@ fun BufferedImage.getGrayScaleRBG(x: Int, y: Int) = getRGB(x, y) and 0xFF
 fun computeHash(bufferedImage: BufferedImage): Long {
     val image = bufferedImage.scaleTo64Bit().toGrayScale()
     val mean = image.computeMeanColor()
-    return image.computeHash(mean)
+    return computeHash(image, mean)
 }
 
 fun BufferedImage.computeMeanColor(): Int {
@@ -33,9 +33,9 @@ fun BufferedImage.computeMeanColor(): Int {
     }
 }
 
-private fun BufferedImage.computeHash(mean: Int): Long {
-    return (0 until height).flatMap { x -> (0 until width).map { y ->
-        if (getGrayScaleRBG(x, y) < mean) 1L else 0L
+private fun computeHash(bufferedImage: BufferedImage, mean: Int): Long {
+    return (0 until bufferedImage.height).flatMap { x -> (0 until bufferedImage.width).map { y ->
+        if (bufferedImage.getGrayScaleRBG(x, y) < mean) 1L else 0L
     } }.reduce { acc, bit ->
         (acc shl 1) + bit
     }
