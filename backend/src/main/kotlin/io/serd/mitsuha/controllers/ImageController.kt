@@ -1,6 +1,7 @@
 package io.serd.mitsuha.controllers
 
 import io.serd.mitsuha.domain.Image
+import io.serd.mitsuha.domain.Tag
 import io.serd.mitsuha.domain.mediaType
 import io.serd.mitsuha.services.ImageService
 import io.serd.mitsuha.util.addHeader
@@ -19,13 +20,21 @@ class ImageController(
 ) {
 
     @PostMapping
-    fun uploadImage(@RequestParam file: MultipartFile) = imageService.saveImage(file)
+    fun uploadImage(@RequestParam file: MultipartFile) = imageService.save(file)
 
     @GetMapping("/{id}")
     fun getImage(@PathVariable id: Int) = imageService.findOne(id)
 
     @GetMapping
     fun getImages() = imageService.findAll()
+
+    @PutMapping("/{id}/tags")
+    fun addTag(@PathVariable id: Int, @RequestBody tag: Tag) = imageService.addTag(id, tag)
+
+    @DeleteMapping("/{id}")
+    fun deleteImage(@PathVariable id: Int) {
+        imageService.delete(id)
+    }
 
     @GetMapping("/resource/{id}-orig.{extension}")
     fun getOrigImage(@PathVariable id: Int) =
@@ -38,8 +47,6 @@ class ImageController(
         imageService.loadThumb(id).let {
             fileResponse(it)
         }
-
-
 
     @GetMapping("/resource/{id}-small.{extension}")
     fun getSmall(@PathVariable id: Int)  =
@@ -57,12 +64,6 @@ class ImageController(
         .contentType(it.first.mediaType())
         .headers(fileHeaders(it.first))
         .body(it.second.readBytes())
-
-
-    @DeleteMapping("/{id}")
-    fun deleteImage(@PathVariable id: Int) {
-        imageService.deleteImage(id)
-    }
 
     private fun fileHeaders(image: Image): HttpHeaders {
         return HttpHeaders()

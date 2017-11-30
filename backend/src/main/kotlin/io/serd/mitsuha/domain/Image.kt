@@ -9,6 +9,7 @@ data class Image(
     val name: String? = null,
     val path: String,
     val extension: Extension,
+    val tags: Set<Tag> = emptySet(),
     @JsonIgnore val hash: Long
 )
 

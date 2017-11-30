@@ -2,10 +2,8 @@ package io.serd.mitsuha.dao
 
 import java.io.Serializable
 
-interface CrudRepository<T, in I: Serializable> {
-    fun createTable()
-
-    fun findOne(id: I): T?
+interface CrudRepository<T, in ID: Serializable> {
+    fun findOne(id: ID): T?
 
     fun findAll(): List<T>
 
@@ -13,5 +11,5 @@ interface CrudRepository<T, in I: Serializable> {
 
     fun remove(value: T)
 
-    fun remove(id: I)
+    fun remove(id: ID)
 }

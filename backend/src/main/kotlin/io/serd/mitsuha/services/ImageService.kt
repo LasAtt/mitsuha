@@ -1,10 +1,10 @@
 package io.serd.mitsuha.services
 
-import com.sun.tools.internal.ws.wsdl.framework.NoSuchEntityException
 import io.serd.mitsuha.buffered_image.computeHash
 import io.serd.mitsuha.dao.ImageRepository
 import io.serd.mitsuha.domain.Extension
 import io.serd.mitsuha.domain.Image
+import io.serd.mitsuha.domain.Tag
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
@@ -14,14 +14,13 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.imageio.ImageIO
 
-interface ImageService {
-    fun createTable()
-    fun findOne(id: Int): Image?
-    fun findAll(): List<Image>
-    fun saveImage(file: MultipartFile): Image
-    fun updateImage(image: Image): Image
-    fun deleteImage(image: Image)
-    fun deleteImage(id: Int)
+interface ImageService : CrudService<Image, Int> {
+    fun save(file: MultipartFile): Image
+
+    fun addTag(id: Int, tag: Tag): Set<Tag>
+    fun removeTag(id: Int, tagId: Int): Set<Tag>
+    fun getTags(id: Int): Set<Tag>
+
     fun loadOrig(id: Int): Pair<Image, File>
     fun loadThumb(id: Int): Pair<Image, File>
     fun loadSmall(id: Int): Pair<Image, File>
@@ -30,17 +29,11 @@ interface ImageService {
 
 @Service
 @Transactional
-class ImageServiceImpl(val repository: ImageRepository, val fileService: FileService): ImageService {
-
-    override fun createTable() {
-        repository.createTable()
-    }
-
-    override fun findOne(id: Int) = repository.findOne(id)
-
-    override fun findAll() = repository.findAll()
-
-    override fun saveImage(file: MultipartFile): Image {
+class ImageServiceImpl(
+    override val repository: ImageRepository,
+    val fileService: FileService
+): ImageService, AbstractCrudService<Image, Int>() {
+    override fun save(file: MultipartFile): Image {
         val extension = Extension.fromMimeType(file.contentType!!)
         val suffix = extension.mimeType.split("/").last()
         val path = getPath()
@@ -52,20 +45,22 @@ class ImageServiceImpl(val repository: ImageRepository, val fileService: FileSer
         return image
     }
 
-    override fun updateImage(image: Image) = repository.save(image)
-
-    override fun deleteImage(image: Image) {
-        fileService.delete(image.path, image.id)
-        repository.remove(image)
+    override fun delete(value: Image) {
+        fileService.delete(value.path, value.id)
+        repository.remove(value)
     }
 
-    override fun deleteImage(id: Int) {
+    override fun delete(id: Int) {
         val image = findOne(id) ?: return
         fileService.delete(image.path, image.id)
         repository.remove(image)
     }
 
-    private fun findOneOrThrow(id: Int) = findOne(id) ?: throw NoSuchEntityException("No image with id $id exists!")
+    override fun addTag(id: Int, tag: Tag): Set<Tag> = repository.addTag(id, tag)
+
+    override fun removeTag(id: Int, tagId: Int): Set<Tag> = repository.removeTag(id, tagId)
+
+    override fun getTags(id: Int): Set<Tag> = repository.getTags(id)
 
     override fun loadOrig(id: Int) = findOneOrThrow(id).let { it to fileService.loadOrig(it) }
 

@@ -1,6 +1,6 @@
 package io.serd.mitsuha
 
-import io.serd.mitsuha.services.ImageService
+import io.serd.mitsuha.dao.TableInitializer
 import org.jetbrains.exposed.spring.SpringTransactionManager
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.CommandLineRunner
@@ -18,12 +18,13 @@ class MitsuhaApplication : WebMvcConfigurer {
     fun transactionManager(@Qualifier("dataSource") dataSource: DataSource) = SpringTransactionManager(dataSource)
 
     @Bean
-    fun init(imageService: ImageService) = CommandLineRunner {
-        imageService.createTable()
+    fun init(tableInitializer: TableInitializer) = CommandLineRunner {
+        tableInitializer.createTables()
     }
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
+            .allowedMethods("GET", "POST", "PUT", "DELETE")
     }
 }
 
